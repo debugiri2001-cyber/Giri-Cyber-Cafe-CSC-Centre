@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Giri Cyber Cafe হিসাব</title>
+<style>
+:root{font-family:system-ui,"Noto Sans Bengali",sans-serif;color:#18212f;background:#f4f6fa}
+body{margin:0}header{background:#173b63;color:white;padding:18px 16px}header h1{font-size:21px;margin:0 0 4px}header p{margin:0;font-size:13px;opacity:.9}
+nav{display:flex;gap:7px;overflow:auto;padding:10px;background:white;position:sticky;top:0;z-index:2}
+nav button{white-space:nowrap;border:0;border-radius:20px;padding:9px 13px;background:#e8eef6;color:#173b63;font-weight:600}
+nav button.active{background:#173b63;color:white}
+main{max-width:1000px;margin:auto;padding:14px}
+.panel{display:none}.panel.active{display:block}
+.card{background:white;border-radius:12px;padding:14px;margin:0 0 13px;box-shadow:0 1px 5px #14243a12}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:12px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+label{display:block;font-size:13px;color:#475569;margin-bottom:4px}
+input,select{width:100%;box-sizing:border-box;padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white;font:inherit}
+button{cursor:pointer}.primary{background:#17623b;color:white;border:0;border-radius:8px;padding:10px 14px;font-weight:600;margin-top:9px}
+.secondary{background:#e8eef6;color:#173b63;border:0;border-radius:8px;padding:9px 12px;font-weight:600;margin:4px 3px 4px 0}
+.danger{background:#fee2e2;color:#991b1b;border:0;border-radius:7px;padding:6px 9px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #e5e7eb}th{background:#f8fafc}
+.tablewrap{overflow:auto}.muted{font-size:12px;color:#64748b}.stat{font-size:23px;font-weight:700;color:#173b63}.statlabel{font-size:12px;color:#64748b}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}
+.notice{background:#fff7df;border-left:4px solid #e5a000;padding:10px;border-radius:7px;font-size:13px;margin:8px 0}
+@media(max-width:520px){main{padding:9px}.card{padding:11px}th,td{padding:7px 4px}}
+</style></head>
+<body>
+<header><h1>Giri Cyber Cafe and CSC Centre</h1><p>Sarrang Bus Stand, Egra • দোকানের দৈনিক হিসাব</p></header>
+<nav>
+<button class="active" data-tab="home">সারাংশ</button><button data-tab="sale">বিক্রি / সার্ভিস</button><button data-tab="rates">সার্ভিস ও রেট</button><button data-tab="counter">প্রিন্টার কাউন্টার</button><button data-tab="expense">খরচ</button><button data-tab="backup">ব্যাকআপ</button>
+</nav>
+<main>
+<section id="home" class="panel active">
+<div class="card"><h2>আজকের হিসাব</h2><div class="grid">
+<div><div class="stat" id="todaySales">₹0</div><div class="statlabel">আজকের বিক্রি</div></div>
+<div><div class="stat" id="todayExpense">₹0</div><div class="statlabel">আজকের খরচ</div></div>
+<div><div class="stat" id="todayNet">₹0</div><div class="statlabel">আজকের নেট</div></div>
+<div><div class="stat" id="todayCount">0</div><div class="statlabel">আজকের কাজের সংখ্যা</div></div>
+</div></div>
+<div class="card"><h2>সাম্প্রতিক বিক্রি</h2><div id="recent" class="muted">এখনও কোনো বিক্রির এন্ট্রি নেই।</div></div>
+<div class="notice">হিসাব এই ডিভাইসের ব্রাউজারে সেভ থাকবে। অন্য ফোন বা কম্পিউটারে নিজে থেকে সিঙ্ক হবে না। নিয়মিত ব্যাকআপ নেবে।</div>
+</section>
+
+<section id="sale" class="panel">
+<div class="card"><h2>নতুন বিক্রি / সার্ভিস এন্ট্রি</h2>
+<div class="grid">
+<div><label>তারিখ</label><input type="date" id="saleDate"></div>
+<div><label>সার্ভিস</label><select id="saleService"></select></div>
+<div><label>পরিমাণ / কপি / কাজ</label><input type="number" min="1" step="1" id="saleQty" value="1"></div>
+<div><label>প্রতি ইউনিট রেট (₹)</label><input type="number" min="0" step=".01" id="saleRate"></div>
+<div><label>পেমেন্ট</label><select id="salePay"><option>Cash</option><option>UPI</option><option>বাকি</option></select></div>
+<div><label>নোট (ঐচ্ছিক)</label><input id="saleNote" placeholder="যেমন: নতুন প্রজেক্ট"></div>
+</div><p>মোট: <strong id="saleTotal">₹0.00</strong></p><button class="primary" id="addSale">বিক্রি যোগ করো</button>
+</div>
+<div class="card"><h2>বিক্রির তালিকা</h2><div class="tablewrap"><table><thead><tr><th>তারিখ</th><th>সার্ভিস</th><th>পরিমাণ</th><th>রেট</th><th>মোট</th><th></th></tr></thead><tbody id="salesRows"></tbody></table></div></div>
+</section>
+
+<section id="rates" class="panel">
+<div class="card"><h2>সার্ভিস ও রেট সেটিংস</h2><p class="muted">এখানে নিজের দোকানের আসল রেট বসাও। পরে নতুন সার্ভিস যোগ বা রেট পরিবর্তন করতে পারবে। পুরোনো বিক্রির রেট বদলাবে না।</p>
+<div class="grid"><div><label>সার্ভিসের নাম</label><input id="newService" placeholder="যেমন: নতুন অনলাইন প্রজেক্ট"></div><div><label>বিভাগ</label><select id="newCategory"><option>জেরক্স ও প্রিন্ট</option><option>ফটো ও PVC</option><option>ল্যামিনেশন ও স্ক্যান</option><option>CSC / অনলাইন</option><option>অন্যান্য</option></select></div><div><label>রেট (₹)</label><input id="newRate" type="number" min="0" step=".01" value="0"></div></div>
+<button class="primary" id="addService">সার্ভিস যোগ করো</button>
+<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>বিভাগ</th><th>সার্ভিস</th><th>রেট (₹)</th><th>কাজ</th></tr></thead><tbody id="serviceRows"></tbody></table></div>
+</div></section>
+
+<section id="counter" class="panel">
+<div class="card"><h2>প্রিন্টার কাউন্টার রিডিং</h2>
+<p class="muted">সকালে বা দোকান বন্ধের সময় মেশিনের মোট কাউন্টার লিখবে। আগের রিডিং থেকে ব্যবহারের সংখ্যা অ্যাপ হিসাব করবে।</p>
+<div class="grid"><div><label>তারিখ</label><input type="date" id="counterDate"></div><div><label>প্রিন্টার</label><select id="printer"><option>Epson M2120</option><option>Brother DCP-T226</option><option>Canon imageCLASS MF284dw</option><option>Epson L8050</option></select></div><div><label>বর্তমান মোট কাউন্টার</label><input type="number" min="0" id="counterValue"></div></div>
+<button class="primary" id="addCounter">রিডিং সেভ করো</button><div id="counterResult" class="muted" style="margin-top:8px"></div>
+<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>তারিখ</th><th>প্রিন্টার</th><th>রিডিং</th><th>ব্যবহার</th></tr></thead><tbody id="counterRows"></tbody></table></div>
+<div class="notice">কাউন্টার থেকে মোট পৃষ্ঠা জানা যায়; কিন্তু কোন কাজের জন্য কত টাকা নেওয়া হয়েছে তা মেশিন বুঝতে পারে না। সরাসরি কপি বা মোবাইল থেকে সব প্রিন্টও নির্ভরযোগ্যভাবে নিজে থেকে শনাক্ত করা যায় না। তাই বিক্রির এন্ট্রি দিতে হবে।</div>
+</div></section>
+
+<section id="expense" class="panel">
+<div class="card"><h2>দোকানের খরচ যোগ করো</h2><div class="grid"><div><label>তারিখ</label><input type="date" id="expDate"></div><div><label>খরচের ধরন</label><select id="expType"><option>দোকান ভাড়া</option><option>বিদ্যুৎ বিল</option><option>ইন্টারনেট বিল</option><option>কাগজ / মালপত্র</option><option>কালি / টোনার</option><option>মেশিন মেরামতি</option><option>যাতায়াত</option><option>অন্যান্য</option></select></div><div><label>টাকা (₹)</label><input type="number" min="0" step=".01" id="expAmount"></div><div><label>বিবরণ</label><input id="expNote"></div></div><button class="primary" id="addExpense">খরচ সেভ করো</button>
+<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>তারিখ</th><th>খরচ</th><th>টাকা</th><th>বিবরণ</th><th></th></tr></thead><tbody id="expenseRows"></tbody></table></div></div>
+</section>
+
+<section id="backup" class="panel">
+<div class="card"><h2>ডেটা ব্যাকআপ ও রিস্টোর</h2><p>নিয়মিত ব্যাকআপ ফাইল ডাউনলোড করে নিরাপদে রাখবে। নতুন ফোন/কম্পিউটারে ডেটা নিতে ব্যাকআপ ফাইল ইমপোর্ট করবে।</p>
+<button class="primary" id="exportData">ব্যাকআপ ডাউনলোড</button>
+<h3>ব্যাকআপ থেকে ফিরিয়ে আনো</h3><input type="file" id="importFile" accept=".json,application/json"><button class="secondary" id="importData">ফাইল ইমপোর্ট</button>
+<button class="danger" id="clearData">সব হিসাব মুছে ফেলো</button>
+</div></section>
+</main>
+<script>
+const defaults=[
+['জেরক্স ও প্রিন্ট','সাদা-কালো জেরক্স A4',0],['জেরক্স ও প্রিন্ট','কালার জেরক্স A4',0],['জেরক্স ও প্রিন্ট','সাদা-কালো জেরক্স A3',0],['জেরক্স ও প্রিন্ট','কালার জেরক্স A3',0],
+['জেরক্স ও প্রিন্ট','A4 সাদা-কালো প্রিন্ট',0],['জেরক্স ও প্রিন্ট','A4 কালার প্রিন্ট',0],['জেরক্স ও প্রিন্ট','ডাবল সাইড প্রিন্ট',0],['জেরক্স ও প্রিন্ট','মোবাইল / PDF প্রিন্ট',0],
+['ফটো ও PVC','পাসপোর্ট ছবি ৩ কপি',0],['ফটো ও PVC','পাসপোর্ট ছবি ৬ কপি',0],['ফটো ও PVC','পাসপোর্ট ছবি ৯ কপি',0],['ফটো ও PVC','ফটো প্রিন্ট',0],['ফটো ও PVC','PVC কার্ড',0],['ফটো ও PVC','ID কার্ড প্রিন্ট',0],
+['ল্যামিনেশন ও স্ক্যান','ID / আধার ল্যামিনেশন',0],['ল্যামিনেশন ও স্ক্যান','A4 ল্যামিনেশন',0],['ল্যামিনেশন ও স্ক্যান','A3 ল্যামিনেশন',0],['ল্যামিনেশন ও স্ক্যান','স্ক্যান',0],['ল্যামিনেশন ও স্ক্যান','টাইপিং / PDF কাজ',0],
+['CSC / অনলাইন','PAN নতুন',0],['CSC / অনলাইন','PAN Correction / Reprint',0],['CSC / অনলাইন','Voter নতুন / Correction',0],['CSC / অনলাইন','Ration Card কাজ',0],['CSC / অনলাইন','Aadhaar Document Update',0],['CSC / অনলাইন','Birth Certificate কাজ',0],['CSC / অনলাইন','চাকরি / পরীক্ষা / স্কলারশিপ ফর্ম',0],['CSC / অনলাইন','সরকারি প্রকল্পের আবেদন',0],['CSC / অনলাইন','অন্যান্য অনলাইন কাজ',0]
+];
+const key='giriCafeLedgerV1';
+let db=JSON.parse(localStorage.getItem(key)||'null')||{services:defaults.map((x,i)=>({id:i+1,cat:x[0],name:x[1],rate:x[2]})),sales:[],expenses:[],counters:[]};
+const $=id=>document.getElementById(id), money=n=>'₹'+Number(n||0).toFixed(2), today=()=>new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem(key,JSON.stringify(db));render()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});
+['saleDate','counterDate','expDate'].forEach(id=>$(id).value=today());
+function render(){
+ $('saleService').innerHTML=db.services.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+ $('serviceRows').innerHTML=db.services.map(s=>`<tr><td>${esc(s.cat)}</td><td>${esc(s.name)}</td><td><input style="max-width:100px" type="number" min="0" step=".01" value="${s.rate}" onchange="changeRate(${s.id},this.value)"></td><td><button class="danger" onclick="delService(${s.id})">বাদ</button></td></tr>`).join('');
+ $('salesRows').innerHTML=db.sales.slice().reverse().map(s=>`<tr><td>${s.date}</td><td>${esc(s.name)}</td><td>${s.qty}</td><td>${money(s.rate)}</td><td>${money(s.total)}</td><td><button class="danger" onclick="delSale(${s.id})">×</button></td></tr>`).join('');
+ $('expenseRows').innerHTML=db.expenses.slice().reverse().map(e=>`<tr><td>${e.date}</td><td>${esc(e.type)}</td><td>${money(e.amount)}</td><td>${esc(e.note||'')}</td><td><button class="danger" onclick="delExpense(${e.id})">×</button></td></tr>`).join('');
+ $('counterRows').innerHTML=db.counters.slice().reverse().map(c=>`<tr><td>${c.date}</td><td>${esc(c.printer)}</td><td>${c.value}</td><td>${c.used===null?'—':c.used}</td></tr>`).join('');
+ const d=today(), ss=db.sales.filter(x=>x.date===d), ee=db.expenses.filter(x=>x.date===d);
+ const st=ss.reduce((a,x)=>a+x.total,0), et=ee.reduce((a,x)=>a+x.amount,0);
+ $('todaySales').textContent=money(st);$('todayExpense').textContent=money(et);$('todayNet').textContent=money(st-et);$('todayCount').textContent=ss.reduce((a,x)=>a+x.qty,0);
+ $('recent').innerHTML=db.sales.length?'<div class="tablewrap"><table><tr><th>তারিখ</th><th>সার্ভিস</th><th>মোট</th></tr>'+db.sales.slice(-5).reverse().map(s=>`<tr><td>${s.date}</td><td>${esc(s.name)}</td><td>${money(s.total)}</td></tr>`).join('')+'</table></div>':'এখনও কোনো বিক্রির এন্ট্রি নেই।';
+}
+window.changeRate=(id,v)=>{let s=db.services.find(x=>x.id===id);if(s)s.rate=Number(v)||0;save()};
+window.delService=id=>{if(confirm('এই সার্ভিসটি তালিকা থেকে বাদ দেবে? পুরোনো বিক্রির হিসাব থাকবে।')){db.services=db.services.filter(x=>x.id!==id);save()}};
+window.delSale=id=>{if(confirm('এই বিক্রির এন্ট্রি মুছবে?')){db.sales=db.sales.filter(x=>x.id!==id);save()}};
+window.delExpense=id=>{if(confirm('এই খরচ মুছবে?')){db.expenses=db.expenses.filter(x=>x.id!==id);save()}};
+function updateTotal(){let s=db.services.find(x=>x.id===$('saleService').value);let r=$('saleRate');if(s)r.value=s.rate;$('saleTotal').textContent=money((Number($('saleQty').value)||0)*(Number(r.value)||0))}
+$('saleService').onchange=updateTotal;$('saleQty').oninput=updateTotal;$('saleRate').oninput=updateTotal;
+$('addService').onclick=()=>{let n=$('newService').value.trim();if(!n)return alert('সার্ভিসের নাম লিখুন');db.services.push({id:Date.now(),cat:$('newCategory').value,name:n,rate:Number($('newRate').value)||0});$('newService').value='';$('newRate').value=0;save()};
+$('addSale').onclick=()=>{let s=db.services.find(x=>x.id===$('saleService').value);let q=Number($('saleQty').value),r=Number($('saleRate').value);if(!s||q<=0||r<0)return alert('সার্ভিস, পরিমাণ ও রেট ঠিক করে দিন');db.sales.push({id:Date.now(),date:$('saleDate').value,name:s.name,qty:q,rate:r,total:q*r,pay:$('salePay').value,note:$('saleNote').value});$('saleQty').value=1;$('saleNote').value='';updateTotal();save()};
+$('addExpense').onclick=()=>{let a=Number($('expAmount').value);if(a<=0)return alert('খরচের টাকা লিখুন');db.expenses.push({id:Date.now(),date:$('expDate').value,type:$('expType').value,amount:a,note:$('expNote').value});$('expAmount').value='';$('expNote').value='';save()};
+$('addCounter').onclick=()=>{let v=Number($('counterValue').value);if(v<0||$('counterValue').value==='')return alert('কাউন্টার রিডিং লিখুন');let p=$('printer').value;let prev=db.counters.filter(c=>c.printer===p).sort((a,b)=>a.date.localeCompare(b.date)).slice(-1)[0];let used=prev?(v-prev.value):null;if(used!==null&&used<0)return alert('নতুন রিডিং আগের রিডিংয়ের চেয়ে কম। ঠিক করে দিন।');db.counters.push({date:$('counterDate').value,printer:p,value:v,used});$('counterResult').textContent=used===null?'প্রথম রিডিং সেভ হয়েছে; পরের রিডিং থেকে ব্যবহারের সংখ্যা দেখা যাবে।':`শেষ রিডিং থেকে ব্যবহার: ${used} পৃষ্ঠা`;save()};
+$('exportData').onclick=()=>{let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Giri-Cyber-Cafe-Backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)};
+$('importData').onclick=()=>{let f=$('importFile').files[0];if(!f)return alert('ব্যাকআপ ফাইল বেছে নিন');let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.services||!x.sales||!x.expenses||!x.counters)throw 0;if(confirm('বর্তমান হিসাবের বদলে ব্যাকআপের হিসাব বসবে। চালিয়ে যাবেন?')){db=x;save();alert('ব্যাকআপ ফিরিয়ে আনা হয়েছে')}}catch(e){alert('ফাইলটি সঠিক ব্যাকআপ নয়')}};r.readAsText(f)};
+$('clearData').onclick=()=>{if(confirm('সতর্কতা: সব সার্ভিস, বিক্রি, খরচ ও কাউন্টার মুছে যাবে। আগে ব্যাকআপ নিয়েছেন?')){localStorage.removeItem(key);location.reload()}};
+render();updateTotal();
+</script></body></html>
